@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 # Specify version
-VERSION = '1.0.0.dev1'
+VERSION = '1.0.0.dev2'
 
 
 # Preprocess
@@ -20,6 +20,7 @@ def readme():
 setup(
   name='py-roma',
   packages=find_packages(),
+  include_package_data=True,
   version=VERSION,
   description='A python development kit containing handy packages.',
   long_description=readme(),
@@ -27,7 +28,7 @@ setup(
   author='William Ro',
   author_email='willi4m@zju.edu.cn',
   url='https://github.com/WilliamRo/roma',
-  download_url='https://github.com/WilliamRo/console/tarball/v' + VERSION,
+  download_url='https://github.com/WilliamRo/roma/tarball/v' + VERSION,
   license='Apache-2.0',
   keywords=['utilities', 'console', 'checker'],
   classifiers=[

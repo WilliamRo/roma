@@ -1,4 +1,4 @@
-roma
+Py-Roma
 ----
 
 This package provides handy tools for regular development in python.
