@@ -72,7 +72,7 @@ from roma import atticus
 assert all([
   atticus.ordinal(1) == '1st', atticus.ordinal(2) == '2nd', atticus.ordinal(3) == '3rd',
   atticus.ordinal(8) == '8th', atticus.ordinal(11) == '11th', atticus.ordinal(12) == '12th',
-  atticus.ordinal(13) == '13th', atticus.ordinal(21) == '21st', atticus.ordinal(112) == '112st',
+  atticus.ordinal(13) == '13th', atticus.ordinal(21) == '21st', atticus.ordinal(112) == '112th',
 ])
 ```
 
