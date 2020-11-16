@@ -1,0 +1,31 @@
+# Copyright 2020 William Ro. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ======-=========================================================-=============
+"""Gather all of the public Roma interfaces into this module."""
+
+# ------------------------------------------------------------------------------
+# Console
+# ------------------------------------------------------------------------------
+from .console.console import Console
+
+console = Console(buffer_size=1000)
+
+# ------------------------------------------------------------------------------
+# SPQR
+# ------------------------------------------------------------------------------
+from .spqr import atticus
+from .spqr import censor
+from .spqr import wizard
+
+

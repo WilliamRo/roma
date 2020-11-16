@@ -1,0 +1,9 @@
+include README.md
+
+recursive-include roma/console/console *.py
+
+# The lines below are unnecessary for now
+global-exclude setup.py mascot.py
+recursive-exclude */*/build *
+
+
