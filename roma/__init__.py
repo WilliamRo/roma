@@ -28,4 +28,6 @@ from .spqr import atticus
 from .spqr import censor
 from .spqr import wizard
 
+from .spqr.censor import check_type
+
 

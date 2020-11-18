@@ -14,7 +14,7 @@
 # ====-==============================================================-==========
 """This module provides methods related to types of method arguments.
 """
-import roma.spqr.atticus as atticus
+from ..spqr import atticus
 
 
 def check_type(input_, type_=None, inner_type=None, nullable=False,
