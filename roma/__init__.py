@@ -22,8 +22,14 @@ from .console.console import Console
 console = Console(buffer_size=1000)
 
 # ------------------------------------------------------------------------------
+# Console
+# ------------------------------------------------------------------------------
+from .via.city import City
+
+# ------------------------------------------------------------------------------
 # SPQR
 # ------------------------------------------------------------------------------
+from .spqr.arguments import Arguments
 from .spqr import atticus
 from .spqr import censor
 from .spqr import wizard
