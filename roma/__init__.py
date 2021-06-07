@@ -27,11 +27,17 @@ console = Console(buffer_size=1000)
 from .via.city import City
 
 # ------------------------------------------------------------------------------
+# Ideology
+# ------------------------------------------------------------------------------
+from .ideology.noear import Nomear
+
+# ------------------------------------------------------------------------------
 # SPQR
 # ------------------------------------------------------------------------------
 from .spqr.arguments import Arguments
 from .spqr import atticus
 from .spqr import censor
+from .spqr import finder
 from .spqr import wizard
 
 from .spqr.censor import check_type
