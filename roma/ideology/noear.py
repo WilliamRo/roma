@@ -26,46 +26,76 @@ class Nomear(object):
   them into a pocket is more comfortable.
   """
 
-  _LOCAL_POCKET_KEY = '_LOCAL_POCKET'
+  _LOCAL_POCKET_KEY = '_NOMEAR_LOCAL_POCKET'
 
-  _register = OrderedDict()
+  cloud = OrderedDict()
+
+
+  @property
+  def _cloud_pocket(self) -> OrderedDict:
+    # Register self in Nomear cloud if necessary
+    if self not in self.cloud: self.cloud[self] = OrderedDict()
+    return self.cloud[self]
+
+
+  @property
+  def _local_pocket(self) -> OrderedDict:
+    # Initialize local pocket if necessary
+    if not hasattr(self, self._LOCAL_POCKET_KEY):
+      setattr(self, self._LOCAL_POCKET_KEY, OrderedDict())
+    return getattr(self, self._LOCAL_POCKET_KEY)
 
 
   @property
   def _pocket(self) -> OrderedDict:
-    if hasattr(self, self._LOCAL_POCKET_KEY):
-      return getattr(self, self._LOCAL_POCKET_KEY)
-
-    # If self is not registered, register
-    if self not in self._register: self._register[self] = OrderedDict()
-    return self._register[self]
+    p = self._cloud_pocket.copy()
+    p.update(self._local_pocket)
+    return p
 
 
-  def localize(self):
-    """Localize self._pocket so that stuff inside can be saved to disk"""
-    setattr(self, self._LOCAL_POCKET_KEY, self._pocket)
+  def in_pocket(self, key):
+    return key in self._pocket
 
 
-  def get_from_pocket(self, key: str, default=None, initializer=None):
-    if key not in self._pocket:
-      if callable(initializer): self._pocket[key] = initializer()
+  def localize(self, key, exclusive=False, key_should_exist=False):
+    if key not in self._cloud_pocket:
+      if key_should_exist: raise KeyError(
+        "!! `{}` not found in {}'s cloud pocket.".format(key, self))
+      else: return None
+
+    return self.put_into_pocket(
+      key, self._cloud_pocket[key], exclusive, local=True)
+
+
+  def get_from_pocket(
+      self, key: str, default=None, initializer=None, local=False,
+      key_should_exist=False):
+    if not self.in_pocket(key):
+      if callable(initializer):
+        return self.put_into_pocket(key, initializer(), local=local)
+      elif key_should_exist: raise KeyError(
+        "!! `{}` not found in {}'s pockets.".format(key, self))
       else: return default
     return self._pocket[key]
 
 
-  def put_into_pocket(self, key: str, thing, exclusive=True):
-    if key in self._pocket and exclusive:
-      raise KeyError("`{}` already exists in {}'s pocket.".format(key, self))
-    self._pocket[key] = thing
+  def put_into_pocket(self, key: str, thing, exclusive=True, local=False):
+    pocket = self._local_pocket if local else self._cloud_pocket
+    if key in pocket and exclusive: raise KeyError(
+      "`{}` already exists in {}'s {} pocket.".format(
+        key, self, 'local' if local else 'cloud'))
+    pocket[key] = thing
+    return thing
 
 
-  def replace_stuff(self, key: str, val):
-    assert key in self._pocket
-    self._pocket[key] = val
+  def replace_stuff(self, key: str, val, local=False):
+    pocket = self._local_pocket if local else self._cloud_pocket
+    assert key in pocket
+    pocket[key] = val
 
 
   def __getitem__(self, item):
-    return self.get_from_pocket(item)
+    return self.get_from_pocket(item, key_should_exist=True)
 
 
   def __setitem__(self, key, value):
