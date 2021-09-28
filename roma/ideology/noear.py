@@ -69,14 +69,17 @@ class Nomear(object):
 
   def get_from_pocket(
       self, key: str, default=None, initializer=None, local=False,
-      key_should_exist=False):
+      key_should_exist=False, put_back=True):
     if not self.in_pocket(key):
       if callable(initializer):
         return self.put_into_pocket(key, initializer(), local=local)
       elif key_should_exist: raise KeyError(
         "!! `{}` not found in {}'s pockets.".format(key, self))
       else: return default
-    return self._pocket[key]
+    if put_back: return self._pocket[key]
+    # Pop if not put back
+    if key in self._cloud_pocket: return self._cloud_pocket.pop(key)
+    return self._local_pocket.pop(key)
 
 
   def put_into_pocket(self, key: str, thing, exclusive=True, local=False):
