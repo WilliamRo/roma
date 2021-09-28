@@ -80,7 +80,7 @@ def walk(root_path, type_filter=None, pattern=None, ignored_patterns=(),
 
   # Filter pattern using regular expression if necessary
   if re_pattern is not None:
-    paths = filter_out(lambda p: re.match(p, re_pattern) is not None)
+    paths = filter_out(lambda p: re.match(re_pattern, p) is not None)
 
   # Return if required
   if return_basename:
