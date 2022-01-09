@@ -15,6 +15,7 @@
 from collections import OrderedDict
 
 
+
 class Nomear(object):
   """This class is designed to provide a `pocket` dictionary for instances
   of classes inherited from it. If you are curious about its name, append
@@ -23,7 +24,7 @@ class Nomear(object):
 
   This class follows the coding philosophy that some fields of a certain
   class do not need to be explicitly appear in constructor. Sometimes put
-  them into a pocket is more comfortable.
+  them into a pocket is a better way.
   """
 
   _LOCAL_POCKET_KEY = '_NOMEAR_LOCAL_POCKET'
@@ -48,13 +49,13 @@ class Nomear(object):
 
   @property
   def _pocket(self) -> OrderedDict:
+    """Gather all stuff in local and cloud pocket and return"""
     p = self._cloud_pocket.copy()
     p.update(self._local_pocket)
     return p
 
 
-  def in_pocket(self, key):
-    return key in self._pocket
+  def in_pocket(self, key): return key in self._pocket
 
 
   def localize(self, key, exclusive=False, key_should_exist=False):
@@ -97,9 +98,26 @@ class Nomear(object):
     pocket[key] = val
 
 
+  def release(self):
+    if self in self.cloud: self.cloud.pop(self)
+
+
   def __getitem__(self, item):
     return self.get_from_pocket(item, key_should_exist=True)
 
 
   def __setitem__(self, key, value):
     self.put_into_pocket(key, value)
+
+
+  @staticmethod
+  def property(local=False, key=None):
+    def _decorator(func):
+      _key = str(func).split()[1].split('.')[1] if key is None else key
+      @property
+      def _func(self):
+        assert isinstance(self, Nomear)
+        return self.get_from_pocket(
+          _key, initializer=lambda: func(self), local=local)
+      return _func
+    return _decorator
