@@ -13,11 +13,17 @@
 # limitations under the License.
 # ======-=========================================================-=============
 """Gather all of the public Roma interfaces into this module."""
+import os, sys
 
 # ------------------------------------------------------------------------------
 # Console
 # ------------------------------------------------------------------------------
-from .console.console import Console
+try:
+  from .console.console import Console
+except Exception:
+  ROOT = os.path.abspath(__file__)
+  sys.path.insert(0, os.path.join(ROOT, 'console'))
+  from console import Console
 
 console = Console(buffer_size=1000)
 
