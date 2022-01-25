@@ -50,6 +50,9 @@ def walk(root_path, type_filter=None, pattern=None, ignored_patterns=(),
   paths = [os.path.join(root_path, p).replace('\\', '/')
            for p in os.listdir(root_path)]
 
+  # Sort paths to avoid the inconsistency between Windows and Linux
+  paths = sorted(paths)
+
   # Define filter function
   def filter_out(f, filter_full_path=False):
     if not callable(f): return paths
