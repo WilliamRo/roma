@@ -49,6 +49,8 @@ class Commander(Nomear):
       if len(args) > 0 and args[0] == '?':
         console.show_info(f'Signature: {func_key}('
                           f'{", ".join([str(v) for v in params_values])})')
+        # Show docstring is provided
+        if func.__doc__: console.show_info(f'Docstring: {func.__doc__}')
         return
 
       # Try to convert args type
