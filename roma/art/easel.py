@@ -13,9 +13,11 @@
 # limitations under the License.
 # =-===========================================================================-
 """An easel holds the canvas."""
-from roma.art.commander import Commander
 from .frame import Frame
 from .shortcuts import Shortcuts
+from collections import OrderedDict
+from typing import Union, Optional
+from roma.art.commander import Commander
 
 import os
 import tkinter as tk
@@ -46,6 +48,18 @@ class Easel(Commander, Frame):
   @title.setter
   def title(self, text): self.window.wm_title(text)
 
+  @Frame.property()
+  def axes(self): return OrderedDict()
+
+  @Frame.property()
+  def cursors(self): return OrderedDict()
+
+  @property
+  def cursor_string(self):
+    return ''.join([
+      f'[{self.cursors[key] + 1}/{len(values)}]'
+      for key, values in self.axes.items() if len(values) > 1])
+
   # endregion: Properties
 
   # region: Private Methods
@@ -55,10 +69,43 @@ class Easel(Commander, Frame):
       os.path.dirname(os.path.abspath(__file__)), 'resources\goose64.ico')
     self.window.wm_iconbitmap(default_ico)
 
+  def _check_axis_key(self, key, should_exist=True):
+    if should_exist and key not in self.axes:
+      raise KeyError(f'!! axes `{key}` not found')
+    elif not should_exist and key in self.axes:
+      raise KeyError(f'!! axes `{key}` already exists')
+
   # endregion: Private Methods
 
   # region: Public Methods
 
+  def add_to_axis(self, key: str, value, index=-1):
+    self._check_axis_key(key)
+    # Convert tuple to list if necessary
+    if isinstance(self.axes[key], tuple):
+      self.axes[key] = list(self.axes[key])
+    self.axes[key].insert(index, value)
+
+  def set_to_axis(self, key: str, value: Union[tuple, list], overwrite=False):
+    if not overwrite: self._check_axis_key(key, should_exist=False)
+    self.axes[key] = value
+    self.cursors[key] = 0
+
+  def create_dimension(self, key): self.set_to_axis(key, [])
+
+  def set_cursor(self, key: str, step: int = 0, cursor: Optional[int] = None,
+                 refresh: bool = False):
+    self._check_axis_key(key)
+    previous_cursor = self.cursors[key]
+    if cursor is not None: cursor = previous_cursor + step
+    self.cursors[key] = cursor % len(self.axes[key])
+    # Refresh easel if necessary
+    if refresh and self.cursors[key] != previous_cursor: self.refresh()
+
+  def get_element(self, key: str):
+    self._check_axis_key(key)
+    if len(self.axes[key]) == 0: return None
+    return self.axes[key][self.cursors[key]]
 
   # endregion: Public Methods
 

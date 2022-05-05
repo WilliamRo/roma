@@ -32,10 +32,13 @@ class Frame(ttk.Frame, Nomear):
   # region: Public Methods
 
   def show(self, show_in_center=True):
+    self.refresh()
     if show_in_center:
       assert isinstance(self.master, tk.Tk)
       center(self.master)
     self.mainloop()
+
+  def refresh(self): pass
 
   # endregion: Public Methods
 
