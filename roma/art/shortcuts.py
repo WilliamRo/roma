@@ -13,6 +13,7 @@
 # limitations under the License.
 # ===-=========================================================================-
 """This class manages all key shortcuts"""
+from ..console.console import console
 from ..ideology.noear import Nomear
 from .frame import Frame
 from typing import Callable, Union
@@ -26,7 +27,8 @@ class Shortcuts(Nomear):
 
   def __init__(self, easel: Frame):
     self.easel: Frame = easel
-    # Library is a list of callable functions for handling events
+    # Library is a list of tuples, each tuple has two entries:
+    # (1) callable functions (2) its description (3) color in manual
     self.library = {}
 
     # Bind key-press events
@@ -45,11 +47,13 @@ class Shortcuts(Nomear):
 
   # region: Public Methods
 
-  def register_key_event(self, key_or_keys: Union[str, list, tuple],
-                         func: Callable, overwrite: bool = False):
+  def register_key_event(
+      self, key_or_keys: Union[str, list, tuple], func: Callable,
+      description: str, color='white', overwrite: bool = False):
     # If keys are provided
     if isinstance(key_or_keys, (tuple, list)):
-      for key in key_or_keys: self.register_key_event(key, func, overwrite)
+      for key in key_or_keys:
+        self.register_key_event(key, func, description, color, overwrite)
       return
     else: assert isinstance(key_or_keys, str)
 
@@ -57,7 +61,12 @@ class Shortcuts(Nomear):
     if key_or_keys in self.library and not overwrite:
       raise KeyError('!! Key `{}` has already been registered')
     assert callable(func)
-    self.library[key_or_keys] = func
+    self.library[key_or_keys] = (func, description, color)
+
+  def list_all_shortcuts(self):
+    console.show_info('Shortcuts:')
+    for key, (_, description, color) in self.library.items():
+      console.supplement(f'{key}: {description}', color=color)
 
   # endregion: Public Methods
 
@@ -65,15 +74,17 @@ class Shortcuts(Nomear):
 
   def _register_common_events(self):
     # Quit
-    self.register_key_event(['q', 'escape'], lambda: self.root.destroy())
+    self.register_key_event(['q', 'escape'], lambda: self.root.destroy(),
+                            description='Close window', color='blue')
     # Call commander
-    self.register_key_event('colon', getattr(self.easel, 'call'))
+    self.register_key_event('colon', getattr(self.easel, 'call'),
+                            description='Call commander', color='blue')
 
   def _on_key_press(self, event: tk.Event):
     key = getattr(event, 'keysym').lower()
 
     if key in self.library:
-      func = self.library[key]
+      func = self.library[key][0]
       # Call method with proper arguments
       kwargs = self._get_kwargs_for_event(func)
       func(**kwargs)

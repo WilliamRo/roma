@@ -50,3 +50,9 @@ class Easel(Commander, Frame):
 
   # endregion: Public Methods
 
+  # region: Builtin Methods
+
+  def man(self): self.shortcuts.list_all_shortcuts()
+
+  # endregion: Builtin Methods
+
