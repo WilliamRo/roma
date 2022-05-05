@@ -17,6 +17,7 @@ from roma.art.commander import Commander
 from .frame import Frame
 from .shortcuts import Shortcuts
 
+import os
 import tkinter as tk
 
 
@@ -31,6 +32,9 @@ class Easel(Commander, Frame):
     # An Easel has a shortcut
     self.shortcuts = Shortcuts(easel=self)
 
+    # Set style
+    self._set_style()
+
   # region: Properties
 
   @property
@@ -42,17 +46,25 @@ class Easel(Commander, Frame):
   @title.setter
   def title(self, text): self.window.wm_title(text)
 
-
   # endregion: Properties
+
+  # region: Private Methods
+
+  def _set_style(self):
+    default_ico = os.path.join(
+      os.path.dirname(os.path.abspath(__file__)), 'resources\goose64.ico')
+    self.window.wm_iconbitmap(default_ico)
+
+  # endregion: Private Methods
 
   # region: Public Methods
 
 
   # endregion: Public Methods
 
-  # region: Builtin Methods
+  # region: Builtin Commands
 
   def man(self): self.shortcuts.list_all_shortcuts()
 
-  # endregion: Builtin Methods
+  # endregion: Builtin Commands
 

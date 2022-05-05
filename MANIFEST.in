@@ -1,4 +1,5 @@
 include README.md
+include roma/art/resources/*.ico
 
 recursive-include roma/console/console *.py
 
