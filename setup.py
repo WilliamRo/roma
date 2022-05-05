@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 # Specify version
-VERSION = '1.0.0.dev7'
+VERSION = '1.0.0.dev8'
 
 
 # Preprocess
@@ -26,7 +26,7 @@ setup(
   long_description=readme(),
   long_description_content_type='text/markdown',
   author='William Ro',
-  author_email='willi4m@zju.edu.cn',
+  author_email='luo.wei@zju.edu.cn',
   url='https://github.com/WilliamRo/roma',
   download_url='https://github.com/WilliamRo/roma/tarball/v' + VERSION,
   license='Apache-2.0',
