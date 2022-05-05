@@ -66,7 +66,8 @@ class Shortcuts(Nomear):
   def list_all_shortcuts(self):
     console.show_info('Shortcuts:')
     for key, (_, description, color) in self.library.items():
-      console.supplement(f'{key}: {description}', color=color)
+      color = None
+      console.supplement(f'{key}: {description}', color)
 
   # endregion: Public Methods
 
