@@ -96,8 +96,9 @@ class Easel(Commander, Frame):
   def set_cursor(self, key: str, step: int = 0, cursor: Optional[int] = None,
                  refresh: bool = False):
     self._check_axis_key(key)
+    if len(self.axes[key]) < 2: return
     previous_cursor = self.cursors[key]
-    if cursor is not None: cursor = previous_cursor + step
+    if cursor is None: cursor = previous_cursor + step
     self.cursors[key] = cursor % len(self.axes[key])
     # Refresh easel if necessary
     if refresh and self.cursors[key] != previous_cursor: self.refresh()

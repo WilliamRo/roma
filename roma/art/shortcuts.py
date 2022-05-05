@@ -65,9 +65,10 @@ class Shortcuts(Nomear):
 
   def list_all_shortcuts(self):
     console.show_info('Shortcuts:')
+    max_len = max([len(key) for key in self.library.keys()])
     for key, (_, description, color) in self.library.items():
       color = None
-      console.supplement(f'{key}: {description}', color)
+      console.supplement(f'{key:{max_len}}: {description}', color)
 
   # endregion: Public Methods
 
@@ -75,7 +76,7 @@ class Shortcuts(Nomear):
 
   def _register_common_events(self):
     # Quit
-    self.register_key_event(['q', 'escape'], lambda: self.root.destroy(),
+    self.register_key_event(['q', 'escape'], self.quit_app,
                             description='Close window', color='blue')
     # Call commander
     self.register_key_event('colon', getattr(self.easel, 'call'),
@@ -108,6 +109,16 @@ class Shortcuts(Nomear):
     return kwargs
 
   # endregion: Events
+
+  # region: Builtin Commands
+
+  def quit_app(self):
+    # Stops main loop
+    self.root.quit()
+    # This is necessary on Windows
+    self.root.destroy()
+
+  # endregion: Builtin Commands
 
 
 
