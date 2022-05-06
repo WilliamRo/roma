@@ -14,7 +14,6 @@
 # ====-======================================================================-==
 """This class can be viewed as an extension of ttk.Frame"""
 from ..ideology.noear import Nomear
-from .tkutils.misc import center
 from tkinter import ttk
 
 import tkinter as tk
@@ -31,20 +30,6 @@ class Frame(ttk.Frame, Nomear):
 
   # region: Public Methods
 
-  def show(self, show_in_center=True):
-    self.refresh()
-    if show_in_center:
-      assert isinstance(self.master, tk.Tk)
-      center(self.master)
-    self.master.mainloop()
-
   def refresh(self): pass
 
   # endregion: Public Methods
-
-
-
-if __name__ == '__main__':
-  frame = Frame()
-  frame.show()
-

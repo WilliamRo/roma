@@ -15,6 +15,7 @@
 """An easel holds the canvas."""
 from .frame import Frame
 from .shortcuts import Shortcuts
+from .tkutils.misc import center
 from collections import OrderedDict
 from typing import Union, Optional
 from roma.art.commander import Commander
@@ -41,9 +42,6 @@ class Easel(Commander, Frame):
 
     # An Easel has a shortcut, which is bound to root
     self.shortcuts = Shortcuts(easel=self)
-
-    # Set style
-    self._set_style()
 
   # region: Properties
 
@@ -115,6 +113,19 @@ class Easel(Commander, Frame):
     self._check_axis_key(key)
     if len(self.axes[key]) == 0: return None
     return self.axes[key][self.cursors[key]]
+
+  def show(self, show_in_center=True):
+    self.refresh()
+    if show_in_center:
+      assert isinstance(self.window, tk.Tk)
+      center(self.window)
+
+    # Set style after mainloop, other a window may appear before mainloop
+    delay_ms = 20
+    self.window.after(delay_ms, self._set_style)
+
+    # Begin mainloop
+    self.window.mainloop()
 
   # endregion: Public Methods
 
