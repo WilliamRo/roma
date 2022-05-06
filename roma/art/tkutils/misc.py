@@ -16,6 +16,9 @@ import tkinter as tk
 
 
 
+SHOW_DELAY_MS = 20
+
+
 def center(window: tk.Tk):
   h, w = window.winfo_reqheight(), window.winfo_reqwidth()
   H, W = window.winfo_screenheight(), window.winfo_screenwidth()
@@ -23,10 +26,24 @@ def center(window: tk.Tk):
   window.geometry("+{}+{}".format(x, y))
 
 
+def show_elegantly(window: tk.Tk, show_in_center: bool = True):
+  """This method is inherited from tframe.main_frame.show.
+  Directly call `center` before calling mainloop somehow leads to an
+  obvious flash of original window in some case. Thus window.after is
+  used to abbreviate this phenomenon.
+  """
+  def init():
+    if show_in_center: center(window)
+    window.focus_force()
+  window.after(SHOW_DELAY_MS, init)
+  window.mainloop()
+
+
 
 if __name__ == '__main__':
   root = tk.Tk()
   root.bind('q', lambda _: root.destroy())
+  # show_elegantly(root)
   center(root)
   root.mainloop()
 
