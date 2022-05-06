@@ -36,7 +36,7 @@ class Frame(ttk.Frame, Nomear):
     if show_in_center:
       assert isinstance(self.master, tk.Tk)
       center(self.master)
-    self.mainloop()
+    self.master.mainloop()
 
   def refresh(self): pass
 

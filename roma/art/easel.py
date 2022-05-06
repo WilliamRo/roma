@@ -25,13 +25,21 @@ import tkinter as tk
 
 
 class Easel(Commander, Frame):
+  """An Easel has a layout of
+  root (an instance of tk.Tk)
+     |- Easel
+           |- Frame1
+           ...
+           |- Widget1
+           ...
+  """
 
   def __init__(self):
 
     # Call parent's constructor. As the top frame, an Easel has no master Frame.
     super(Easel, self).__init__()
 
-    # An Easel has a shortcut
+    # An Easel has a shortcut, which is bound to root
     self.shortcuts = Shortcuts(easel=self)
 
     # Set style
