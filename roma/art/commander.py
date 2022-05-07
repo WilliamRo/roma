@@ -35,7 +35,7 @@ class Commander(Nomear):
     self.command_history.insert(0, cmd_string)
 
     # Get method
-    func = getattr(self, func_key, None)
+    func = self._get_attribute(func_key, None)
     if not callable(func):
       self._err(' ! command `{}` not found.'.format(func_key))
       return
@@ -98,6 +98,10 @@ class Commander(Nomear):
       Commander._err(' ! `{}` is not an appropriate command'.format(s))
       return None
     return s, func_key, args, kwargs
+
+
+  def _get_attribute(self, key, default_value):
+    return getattr(self, key, default_value)
 
 
   @staticmethod

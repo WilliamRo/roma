@@ -13,10 +13,11 @@
 # limitations under the License.
 # ===-=========================================================================-
 """This class manages all key shortcuts"""
+from collections import OrderedDict
+from typing import Callable, Union, Optional
+from .frame import Frame
 from ..console.console import console
 from ..ideology.noear import Nomear
-from .frame import Frame
-from typing import Callable, Union
 
 import inspect
 import tkinter as tk
@@ -25,11 +26,19 @@ import tkinter as tk
 
 class Shortcuts(Nomear):
 
-  def __init__(self, easel: Frame):
+  def __init__(self, easel: Frame, external_fetcher: Optional[Callable]=None):
+    """This class provides logics to handle keyboard events of a tk window
+
+    :param easel: An easel
+    :param external_fetcher: None or a function, which returns a dictionary
+                             of functions
+    """
     self.easel: Frame = easel
+    self.external_fetcher: Optional[Callable] = external_fetcher
+
     # Library is a list of tuples, each tuple has two entries:
     # (1) callable functions (2) its description (3) color in manual
-    self.library = {}
+    self._library = OrderedDict()
 
     # Bind key-press events
     self.easel.master.bind('<KeyPress>', self._on_key_press)
@@ -38,6 +47,15 @@ class Shortcuts(Nomear):
     self._register_common_events()
 
   # region: Properties
+
+  @property
+  def library(self):
+    result = self._library
+    if callable(self.external_fetcher):
+      external_library = self.external_fetcher()
+      assert isinstance(external_library, dict)
+      result.update(external_library)
+    return result
 
   @property
   def root(self) -> tk.Tk:
@@ -57,11 +75,11 @@ class Shortcuts(Nomear):
       return
     else: assert isinstance(key_or_keys, str)
 
-    # Otherwise register a single key
-    if key_or_keys in self.library and not overwrite:
+    # Otherwise, register a single key
+    if key_or_keys in self._library and not overwrite:
       raise KeyError('!! Key `{}` has already been registered')
     assert callable(func)
-    self.library[key_or_keys] = (func, description, color)
+    self._library[key_or_keys] = (func, description, color)
 
   def list_all_shortcuts(self):
     console.show_info('Shortcuts:')
