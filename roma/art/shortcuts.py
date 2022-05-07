@@ -101,14 +101,14 @@ class Shortcuts(Nomear):
                             description='Call commander', color='blue')
 
   def _on_key_press(self, event: tk.Event):
-    key = getattr(event, 'keysym').lower()
+    key = getattr(event, 'keysym')
 
     if key in self.library:
       func = self.library[key][0]
       # Call method with proper arguments
       kwargs = self._get_kwargs_for_event(func)
       func(**kwargs)
-    elif key not in ('control_l', 'alt_l', 'shift_l'):
+    elif key not in ('Control_L', 'Alt_L', 'Shift_L'):
       # Ignore modifiers
       print('>> key "{}" pressed'.format(key))
 
