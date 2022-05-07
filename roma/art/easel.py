@@ -123,6 +123,7 @@ class Easel(Commander, Frame):
     # Set style after mainloop, other a window may appear before mainloop
     delay_ms = 20
     self.window.after(delay_ms, self._set_style)
+    self.window.after(delay_ms, self.window.focus_force)
 
     # Begin mainloop
     self.window.mainloop()
