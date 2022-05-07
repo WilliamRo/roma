@@ -86,7 +86,7 @@ class Nomear(object):
   def put_into_pocket(self, key: str, thing, exclusive=True, local=False):
     pocket = self._local_pocket if local else self._cloud_pocket
     if key in pocket and exclusive: raise KeyError(
-      "`{}` already exists in {}'s {} pocket.".format(
+      "!! `{}` already exists in {}'s {} pocket.".format(
         key, self, 'local' if local else 'cloud'))
     pocket[key] = thing
     return thing
@@ -94,7 +94,7 @@ class Nomear(object):
 
   def replace_stuff(self, key: str, val, local=False):
     pocket = self._local_pocket if local else self._cloud_pocket
-    assert key in pocket
+    if key not in pocket: raise KeyError(f'!! `{key}` not found')
     pocket[key] = val
 
 
@@ -113,7 +113,7 @@ class Nomear(object):
   @staticmethod
   def property(local=False, key=None):
     def _decorator(func):
-      _key = str(func).split()[1].split('.')[1] if key is None else key
+      _key = func.__name__ if key is None else key
       @property
       def _func(self):
         assert isinstance(self, Nomear)
