@@ -82,9 +82,18 @@ class Shortcuts(Nomear):
     self._library[key_or_keys] = (func, description, color)
 
   def list_all_shortcuts(self):
+    # Merge keys with same function
+    table = OrderedDict()
+    for key, (func, description, color) in self.library.items():
+      if func not in table: table[func] = [[], description, color]
+      table[func][0].append(key)
+    # Convert key list to string
+    for v in table.values(): v[0] = ', '.join(v[0])
+
+    # Show shortcut table
     console.show_info('Shortcuts:')
-    max_len = max([len(key) for key in self.library.keys()])
-    for key, (_, description, color) in self.library.items():
+    max_len = max([len(v[0]) for v in table.values()])
+    for key, description, color in table.values():
       color = None
       console.supplement(f'{key:{max_len}}: {description}', color)
 
