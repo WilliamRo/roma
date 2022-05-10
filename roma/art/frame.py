@@ -14,13 +14,12 @@
 # ====-======================================================================-==
 """This class can be viewed as an extension of ttk.Frame"""
 from ..ideology.noear import Nomear
-from tkinter import ttk
 
 import tkinter as tk
 
 
 
-class Frame(ttk.Frame, Nomear):
+class Frame(tk.Frame, Nomear):
 
   def __init__(self, master=None):
     # If master is not provided, load a default one
