@@ -103,7 +103,7 @@ class Shortcuts(Nomear):
 
   def _register_common_events(self):
     # Quit
-    self.register_key_event(['q', 'escape'], self.quit_app,
+    self.register_key_event(['q', 'Escape'], self.quit_app,
                             description='Close window', color='blue')
     # Call commander
     self.register_key_event('colon', getattr(self.easel, 'call'),
