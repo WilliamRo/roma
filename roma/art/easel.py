@@ -90,7 +90,8 @@ class Easel(Commander, Frame):
     # Convert tuple to list if necessary
     if isinstance(self.axes[key], tuple):
       self.axes[key] = list(self.axes[key])
-    self.axes[key].insert(index, value)
+    if index == -1: self.axes[key].append(value)
+    else: self.axes[key].insert(index, value)
 
   def set_to_axis(self, key: str, value: Union[tuple, list], overwrite=False):
     if not overwrite: self._check_axis_key(key, should_exist=False)
