@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ======-=========================================================-=============
-"""All roads lead to Rome
-
-(1) The topology structure should be an undirected graph.
-(2)
-
-
+"""Once a letter had been written by the emperor, it will be delivered
+quickly and safely to its destination by a `Mercurius`.
 """
