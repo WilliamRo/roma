@@ -70,7 +70,8 @@ class Commander(Nomear):
       params = inspect.signature(func).parameters
       msg = f'{func_name}({", ".join([str(v) for v in params.values()])})'
       if func_name in self.command_hints:
-        msg += '\n\n' + self.command_hints[func_name]
+        ch = self.command_hints[func_name]
+        msg += '\n\n' + ch() if callable(ch) else ch
       elif func.__doc__: msg += '\n\n' + func.__doc__
 
     secretary.set_message(msg)
