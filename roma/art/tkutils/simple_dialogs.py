@@ -18,7 +18,7 @@ import tkinter as tk
 
 
 
-def ask_string(history_buffer=()):
+def ask_string(history_buffer=(), on_text_changed=None):
   """This widget works like pressing `:` in IdeaVim.
 
      history_buffer = [latest_cmd, ...]
@@ -39,6 +39,7 @@ def ask_string(history_buffer=()):
   sv = tk.StringVar(root)
   def _text_modified():
     if box[-1]: history_buffer[0] = sv.get()
+    if callable(on_text_changed): on_text_changed(sv.get(), root)
   sv.trace_add('write', lambda *args: _text_modified())
   text_box = tk.Entry(root, width=50, textvariable=sv)
   text_box.pack()

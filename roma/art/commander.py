@@ -15,19 +15,75 @@
 from ..console.console import console
 from ..ideology.noear import Nomear
 from .tkutils.simple_dialogs import ask_string
+from .tipbox import TipBox
 
 import inspect
+import tkinter as tk
 
 
 
 class Commander(Nomear):
 
+  # region: Properties
+
   @Nomear.property()
   def command_history(self) -> list: return []
 
+  @property
+  def on_command_text_changed(self):
+    """A method for responding to text-changed events in the asking dialog.
+    This method should accept 2 arguments:
+     (1) changed_text: str; (2) root: tk.Root
+    """
+    return self.get_from_pocket('on_command_text_changed', default=None)
+
+  @on_command_text_changed.setter
+  def on_command_text_changed(self, func):
+    assert callable(func)
+    self.put_into_pocket('on_command_text_changed', func)
+
+  @Nomear.property()
+  def command_hints(self) -> dict: return {}
+
+  # endregion: Properties
+
+  # region: Public Methods
+
+  def default_on_command_text_changed(self, text, root):
+    assert isinstance(text, str) and isinstance(root, tk.Tk)
+
+    # Get the TipBox
+    secretary: TipBox = self.get_from_pocket(
+      'SeCReTArY', initializer=lambda: TipBox())
+
+    # Get func name, hide tip if func_name is not ready
+    func_name = text.split(' ')[0]
+    if len(func_name) < 2:
+      secretary.hide()
+      return
+
+    # Set message according to func_name
+    func = self._get_attribute(func_name, None)
+    if func is None:
+      msg = f'Command `{func_name}` not found'
+    else:
+      params = inspect.signature(func).parameters
+      msg = f'{func_name}({", ".join([str(v) for v in params.values()])})'
+      if func_name in self.command_hints:
+        msg += '\n\n' + self.command_hints[func_name]
+      elif func.__doc__: msg += '\n\n' + func.__doc__
+
+    secretary.set_message(msg)
+    secretary.show()
+
+    # Set location
+    entry = root.winfo_children()[0]
+    x, y = entry.winfo_rootx(), entry.winfo_rooty() + entry.winfo_height() + 1
+    secretary.geometry(f'+{x}+{y}')
 
   def call(self):
-    cmd = self.ask(history_buffer=self.command_history)
+    cmd = self.ask(history_buffer=self.command_history,
+                   on_command_text_changed=self.on_command_text_changed)
     if cmd is None: return
     cmd_string, func_key, args, kwargs = cmd
 
@@ -45,14 +101,6 @@ class Commander(Nomear):
     params_values = list(params_dict.values())
     has_annotation = lambda p: p.annotation is not inspect._empty
     try:
-      # Handle inquiry
-      if len(args) > 0 and args[0] == '?':
-        console.show_info(f'Signature: {func_key}('
-                          f'{", ".join([str(v) for v in params_values])})')
-        # Show docstring is provided
-        if func.__doc__: console.show_info(f'Docstring: {func.__doc__}')
-        return
-
       # Try to convert args type
       for i in range(len(args)):
         p = params_values[i]
@@ -73,9 +121,10 @@ class Commander(Nomear):
 
 
   @staticmethod
-  def ask(history_buffer=()):
+  def ask(history_buffer=(), on_command_text_changed=None):
     # Ask for command
-    s = ask_string(history_buffer=history_buffer)
+    s = ask_string(history_buffer=history_buffer,
+                   on_text_changed=on_command_text_changed)
     if s is None: return None
 
     assert isinstance(s, str)
@@ -99,11 +148,15 @@ class Commander(Nomear):
       return None
     return s, func_key, args, kwargs
 
+  # endregion: Public Methods
+
+  # region: Private Methods
 
   def _get_attribute(self, key, default_value):
     return getattr(self, key, default_value)
 
-
   @staticmethod
   def _err(text):
     console.write_line(text, color='red')
+
+  # endregion: Private Methods
