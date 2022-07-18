@@ -19,6 +19,7 @@ from .tipbox import TipBox
 
 import inspect
 import tkinter as tk
+import traceback
 
 
 
@@ -113,12 +114,11 @@ class Commander(Nomear):
 
       # Execute
       func(*args, **kwargs)
-    except Exception as e:
+    except:
       self._err(' ! Failed to execute command `{}`'.format(cmd_string))
       self._err('.. Error Message:')
       self._err('- ' * 39)
-      self._err(str(e))
-      self._err('- ' * 39)
+      self._err(traceback.format_exc() + '- ' * 39)
 
 
   @staticmethod
