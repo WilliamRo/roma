@@ -26,7 +26,8 @@ class TipBox(tk.Toplevel, Nomear):
 
     # Own variables
     self.message = tk.StringVar()
-    tk.Message(self, textvariable=self.message, aspect=1000).grid()
+    tk.Message(self, textvariable=self.message, font='TkFixedFont',
+               aspect=1000).grid()
 
     # Remove title bar
     self.overrideredirect(True)
