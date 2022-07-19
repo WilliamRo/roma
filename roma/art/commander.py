@@ -46,6 +46,12 @@ class Commander(Nomear):
   @Nomear.property()
   def command_hints(self) -> dict: return {}
 
+  _SECRETARY_KEY = 'SeCReTArY'
+
+  @property
+  def secretary(self) -> TipBox:
+    return self.get_from_pocket(self._SECRETARY_KEY, default=None)
+
   # endregion: Properties
 
   # region: Public Methods
@@ -55,7 +61,7 @@ class Commander(Nomear):
 
     # Get the TipBox
     secretary: TipBox = self.get_from_pocket(
-      'SeCReTArY', initializer=lambda: TipBox())
+      self._SECRETARY_KEY, initializer=lambda: TipBox())
 
     # Get func name, hide tip if func_name is not ready
     func_name = text.split(' ')[0]
@@ -86,6 +92,8 @@ class Commander(Nomear):
   def call(self):
     cmd = self.ask(history_buffer=self.command_history,
                    on_command_text_changed=self.on_command_text_changed)
+    # Quit secretary if exists
+    if self.secretary is not None: self.secretary.hide()
     if cmd is None: return
     cmd_string, func_key, args, kwargs = cmd
 
