@@ -39,6 +39,7 @@ class Easel(Commander, Frame):
 
     # Call parent's constructor. As the top frame, an Easel has no master Frame.
     super(Easel, self).__init__()
+    self.window.withdraw()
 
     # An Easel has a shortcut, which is bound to root
     self.shortcuts = Shortcuts(easel=self)
@@ -117,6 +118,7 @@ class Easel(Commander, Frame):
 
   def show(self, show_in_center=True):
     self.refresh()
+    self.window.deiconify()
     if show_in_center:
       assert isinstance(self.window, tk.Tk)
       center(self.window)
