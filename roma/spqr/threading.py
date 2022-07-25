@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =-==========================================================================-
+import time
+
 from roma import Nomear
 from typing import Callable
 
@@ -21,23 +23,28 @@ import threading
 
 class XNode(Nomear):
 
+  KEY_SHOULD_TERMINATE = 'KEY_SHOULD_TERMINATE'
+  KEY_PARENT_THREAD = 'KEY_PARENT_THREAD'
+
   @property
   def parent_node(self):
-    return self.get_from_pocket('parent_thread', key_should_exist=True)
+    return self.get_from_pocket(self.KEY_PARENT_THREAD, key_should_exist=True)
 
 
   @parent_node.setter
   def parent_node(self, val):
     assert isinstance(val, XNode)
-    self.put_into_pocket('parent_thread', val)
+    self.put_into_pocket(self.KEY_PARENT_THREAD, val)
 
 
   @Nomear.property()
   def child_nodes(self): return []
 
 
-  @Nomear.property()
-  def should_terminate(self): return False
+  @property
+  def should_terminate(self):
+    # Otherwise, check the corresponding flag in pocket
+    return self.get_from_pocket(self.KEY_SHOULD_TERMINATE, False)
 
 
   @Nomear.property(key='this_thread')
@@ -45,25 +52,30 @@ class XNode(Nomear):
     return threading.currentThread()
 
 
-  def terminate(self):
+  def terminate(self, block=False):
     """Terminate this thread, which should be executed as long-live thread.
     """
-    self.replace_stuff('should_terminate', True)
+    self.put_into_pocket(self.KEY_SHOULD_TERMINATE, True, exclusive=False)
     assert isinstance(self.parent_node, XNode)
     self.parent_node.child_nodes.remove(self)
+    if block: self.thread.join()
 
 
-  def execute_a_new_child(self, func: Callable, long_live: bool = True):
+  def execute_a_new_child(self, func: Callable, long_live: bool = True,
+                          daemon: bool = True):
+    """Life cycle of children executed using this method will follow &self
+    """
     node = XNode()
     self.child_nodes.append(node)
     node.parent_node = self
-    node.execute_async(func, long_live)
+    node.execute_async(func, long_live, daemon=daemon)
     return node
 
 
-  def execute_async(self, func: Callable, long_live: bool = True):
+  def execute_async(self, func: Callable, long_live: bool = True,
+                    daemon: bool = True):
     if long_live: func = self._get_while_loop(func)
-    t = threading.Thread(target=func)
+    t = threading.Thread(target=func, daemon=daemon)
     self.put_into_pocket('this_thread', t)
     t.start()
 
