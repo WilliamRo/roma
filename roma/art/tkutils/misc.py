@@ -20,6 +20,9 @@ SHOW_DELAY_MS = 20
 
 
 def center(window: tk.Tk):
+  # Added by @Even to ensure windows are centered in Win11
+  window.update_idletasks()
+
   h, w = window.winfo_reqheight(), window.winfo_reqwidth()
   H, W = window.winfo_screenheight(), window.winfo_screenwidth()
   x, y = (W - w) // 2, (H - h) // 2
