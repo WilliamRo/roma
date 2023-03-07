@@ -79,7 +79,7 @@ class Arguments(object):
     kwargs = OrderedDict()
     while len(pieces) > 0:
       piece = pieces.pop(0)
-      r = re.match(r'(^[a-zA-Z]+)=(.+)', piece)
+      r = re.match(r'(^[a-zA-Z0-9_]+)=(.+)', piece)
       if r is None or len(r.groups()) != 2: raise ValueError(
         "Illegal string for kwargs: " + piece)
       k, v =  r.groups()
