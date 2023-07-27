@@ -78,6 +78,7 @@ def ask_string(history_buffer=(), on_text_changed=None):
   # Display dialog at the center
   center(root)
   root.focus_force()
+  text_box.focus_set()  # Added on 2023-Jul-27 to fix focus issue in Win11
   root.mainloop()
 
   # Return the text in the text box
