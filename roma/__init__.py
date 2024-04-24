@@ -41,6 +41,7 @@ from .spqr import finder
 from .spqr import wizard
 
 from .spqr.censor import check_type
+from .spqr.table import Table
 
 # ------------------------------------------------------------------------------
 # Mercurius
