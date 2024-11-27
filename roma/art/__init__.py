@@ -12,8 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ======-=========================================================-=============
-from .commander import Commander
-from .easel import Easel
+try:
+  from .commander import Commander
+  from .easel import Easel
 
-from .tkutils.misc import center
-from .tkutils.simple_dialogs import ask_string
+  from .tkutils.misc import center
+  from .tkutils.simple_dialogs import ask_string
+except:
+  # e.g., Linux systems may not support GUI
+  print('!! Failed to import `Commander`, `Easel`, `center`, `ask_string`')

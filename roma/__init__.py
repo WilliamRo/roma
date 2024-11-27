@@ -17,7 +17,11 @@
 # ------------------------------------------------------------------------------
 # Art
 # ------------------------------------------------------------------------------
-from .art import Easel
+try:
+  from .art import Easel
+except:
+  # Sometimes GUI support is not available
+  print('! Warning: Failed to import `Easel` from `roma.art`.')
 
 # ------------------------------------------------------------------------------
 # Console
