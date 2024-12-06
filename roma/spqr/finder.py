@@ -241,7 +241,7 @@ def synchronize(src_dir, dst_dir, pattern=None, ignored_patterns=(),
   # Sanity check
   for path, name in zip((src_dir, dst_dir), ('Source', 'Destination')):
     if not os.path.exists(path): raise FileNotFoundError(
-      '!! {} path `{}` not found.'.format(path, name))
+      '!! {} path `{}` not found.'.format(name, path))
 
   if os.path.basename(src_dir) != os.path.basename(dst_dir):
     raise AssertionError('!! Base name between source path `{}` and destination'
