@@ -8,7 +8,7 @@ version = "1.0.0"
 authors = [
   { name="William Ro", email="walienluo@gmail.com" },
 ]
-description = "A general data viewer for scientific study"
+description = "A python development kit containing handy packages."
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
@@ -25,5 +25,5 @@ license = "Apache-2.0"
 license-files = ["LICEN[CS]E*"]
 
 [project.urls]
-Homepage = "https://github.com/WilliamRo/pictor"
-Issues = "https://github.com/WilliamRo/pictor/issues"
+Homepage = "https://github.com/WilliamRo/roma"
+Issues = "https://github.com/WilliamRo/roma/issues"
