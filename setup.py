@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 # Specify version
-VERSION = '1.0.0.dev8'
+VERSION = '1.0.0'
 
 
 # Preprocess

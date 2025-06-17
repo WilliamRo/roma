@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py-roma"
+version = "1.0.0"
+authors = [
+  { name="William Ro", email="walienluo@gmail.com" },
+]
+description = "A general data viewer for scientific study"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 3",
+    "Topic :: Utilities",
+]
+license = "Apache-2.0"
+license-files = ["LICEN[CS]E*"]
+
+[project.urls]
+Homepage = "https://github.com/WilliamRo/pictor"
+Issues = "https://github.com/WilliamRo/pictor/issues"
