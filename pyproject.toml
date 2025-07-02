@@ -21,7 +21,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Utilities",
 ]
-license = "Apache-2.0"
 license-files = ["LICEN[CS]E*"]
 
 [project.urls]
