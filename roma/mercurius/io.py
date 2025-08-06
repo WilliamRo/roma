@@ -25,10 +25,12 @@ def dir_and_fn(file_path: str):
 
 
 def load_file(file_path: str, verbose: bool = False):
-  if verbose:
-    dn, fn = dir_and_fn(file_path)
-    console.show_status(f'Loading `{fn}` from `{dn}` ...')
-  with open(file_path, 'rb') as file: return pickle.load(file)
+  with open(file_path, 'rb') as file:
+    data = pickle.load(file)
+    if verbose:
+      dn, fn = dir_and_fn(file_path)
+      console.show_status(f'Loaded `{fn}` from `{dn}`.')
+    return data
 
 
 
